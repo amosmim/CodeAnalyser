@@ -7,22 +7,21 @@ import dataStructures.exceptions.DoesNotExistLinkException;
 
 import java.util.*;
 
-public class Graph <T> {
+public class Graph <T> implements ISearchable{
     private HashMap<String, Set<String>> links;
-    private LinkedHashMap<String, GraphNode<T>> nodes;
+    private LinkedHashMap<String, ILabeledData> nodes;
 
     public Graph() {
         this.links = new HashMap<String, Set<String>>();
-        this.nodes = new LinkedHashMap<String, GraphNode<T>>();
+        this.nodes = new LinkedHashMap<String, ILabeledData>();
     }
 
-    public void addNode(String label) throws AlreadyExistLabelException {
-        if (this.nodes.containsKey(label)) {
-            throw new AlreadyExistLabelException(label);
+    public void addNode(ILabeledData data) throws AlreadyExistLabelException {
+        if (this.nodes.containsKey(data.getLabel())) {
+            throw new AlreadyExistLabelException(data.getLabel());
         }
-        GraphNode node = new GraphNode(label);
-        this.nodes.put(label, node);
-        this.links.put(label, new HashSet<>());
+        this.nodes.put(data.getLabel(), data);
+        this.links.put(data.getLabel(), new HashSet<>());
     }
 
     public void deleteNode(String label) throws DoesNotExistLabelException {
@@ -75,7 +74,11 @@ public class Graph <T> {
         return ( (this.nodes.containsKey(from)) && (this.nodes.containsKey(to)) && (this.links.get(from).contains(to)) );
     }
 
-    public GraphNode<T> getNode(String label) throws DoesNotExistLabelException {
+    public boolean nodeExist(String label){
+        return this.nodes.containsKey(label);
+    }
+
+    public ILabeledData getNode(String label) throws DoesNotExistLabelException {
         if (this.nodes.containsKey(label)) {
             return this.nodes.get(label);
         } else {

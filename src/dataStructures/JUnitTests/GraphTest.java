@@ -1,12 +1,16 @@
 package dataStructures.JUnitTests;
 
 import dataStructures.Graph;
+import dataStructures.SimpleData;
 import dataStructures.exceptions.AlreadyExistLabelException;
 import dataStructures.exceptions.AlreadyExistLinkException;
 import dataStructures.exceptions.DoesNotExistLabelException;
 import dataStructures.exceptions.DoesNotExistLinkException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import java.util.HashSet;
+import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -19,14 +23,14 @@ class GraphTest {
         this.graph = new Graph<>();
         try {
 
-            this.graph.addNode("a");
-            this.graph.addNode("b");
-            this.graph.addNode("c");
+            this.graph.addNode(new SimpleData("a"));
+            this.graph.addNode(new SimpleData("b"));
+            this.graph.addNode(new SimpleData("c"));
             this.graph.addLink("a" , "c");
             this.graph.addLink("a" , "b");
             this.graph.addLink("b" , "c");
 
-            this.graph.getNode("a").setData("data");
+            this.graph.getNode("a");
 
         } catch (Exception e) {
             assertTrue(false);
@@ -37,7 +41,7 @@ class GraphTest {
     @Test
     void addNode() {
         try {
-            this.graph.addNode("d");
+            this.graph.addNode(new SimpleData("d"));
         } catch (Exception e) {
             assertTrue(false);
         }
@@ -65,7 +69,7 @@ class GraphTest {
     void addNodeShouldThrow() {
         Throwable exception = assertThrows(
                 AlreadyExistLabelException.class,
-                () -> this.graph.addNode("b")
+                () -> this.graph.addNode(new SimpleData("b"))
         );
         assertEquals(exception.getMessage(), "b already exist in the graph!");
     }
@@ -141,7 +145,7 @@ class GraphTest {
     @Test
     void getNode() {
         try {
-            assertEquals(this.graph.getNode("a").getData(), "data");
+            assertEquals(this.graph.getNode("a").getLabel(), "a");
         } catch (Exception e) {
             assertTrue(false);
         }
@@ -158,8 +162,36 @@ class GraphTest {
 
     @Test
     void getNextNodesOf() {
-        // TODO
-        assertTrue(false);
+        Set<String> set =  new HashSet<>();
+
+        try {
+            assertEquals(this.graph.getNextNodesOf("c"), set);
+            set.add("c");
+            assertEquals(this.graph.getNextNodesOf("b"), set);
+            set.add("b");
+            assertEquals(this.graph.getNextNodesOf("a"), set);
+        } catch (DoesNotExistLabelException e) {
+            assertTrue(false);
+        }
+    }
+
+
+    @Test
+    void getNextNodesOfShouldThrowUnExist() {
+        Throwable exception = assertThrows(
+                DoesNotExistLabelException.class,
+                () -> this.graph.getNextNodesOf("r")
+        );
+
+        assertEquals(exception.getMessage(), "r doesn't exist in the graph!");
+    }
+
+    @Test
+    void nodeExist(){
+        assertTrue(this.graph.nodeExist("a"));
+        assertTrue(this.graph.nodeExist("b"));
+        assertTrue(this.graph.nodeExist("c"));
+        assertFalse(this.graph.nodeExist("d"));
     }
 
 }
