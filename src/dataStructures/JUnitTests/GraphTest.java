@@ -163,7 +163,6 @@ class GraphTest {
     @Test
     void getNextNodesOf() {
         Set<String> set =  new HashSet<>();
-
         try {
             assertEquals(this.graph.getNextNodesOf("c"), set);
             set.add("c");

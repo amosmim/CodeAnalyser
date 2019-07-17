@@ -94,5 +94,7 @@ public class Graph <T> implements ISearchable{
         }
     }
 
-
+    public Set<String> getAllLabels() {
+        return this.nodes.keySet();
+    }
 }

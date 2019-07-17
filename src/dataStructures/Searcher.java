@@ -13,7 +13,10 @@ public class Searcher {
 
     /**
      * return sub-graph, from the given node.
-     * */
+     * @param graph graph to reference.
+     * @param label given node to root from.
+     * @return ISearchable sub-graph from label with all the original links.
+     */
     public static ISearchable getOffspringOf(ISearchable graph, String label) {
         ISearchable offspringMap = new Graph<>();
         Queue<String> queue =  new LinkedList<>();
@@ -48,6 +51,29 @@ public class Searcher {
             }
         }
         return offspringMap;
-
     }
+
+    /**
+     * Returns all the roots in the graph
+     * @param graph graph to search on.
+     * @return list of labels of all node that no other link to.
+     */
+    public static Set<String> getRoots(ISearchable graph){
+        Set<String> nodes = graph.getAllLabels();
+        Set<String> roots = new HashSet<>(nodes);
+        for (String node : nodes) {
+            try {
+                for (String offspring : graph.getNextNodesOf(node)) {
+                    if (roots.contains(offspring)) {
+                        roots.remove(offspring);
+                    }
+                }
+            } catch (DoesNotExistLabelException e) {
+                e.printStackTrace();
+            }
+        }
+        return roots;
+    }
+
+
 }

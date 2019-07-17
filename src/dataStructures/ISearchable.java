@@ -13,5 +13,6 @@ public interface ISearchable {
     boolean nodeExist(String label);
     ILabeledData getNode(String label) throws DoesNotExistLabelException;
     Set<String> getNextNodesOf(String label) throws DoesNotExistLabelException;
+    Set<String> getAllLabels();
 
 }
